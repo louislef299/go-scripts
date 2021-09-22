@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#echo ${pwd}
+
+if [[ $1 == "rm" ]]; then
+    echo "Removing .terraform file..."
+    rm -rf .terraform
+fi
+
+terraform init
+terraform plan
