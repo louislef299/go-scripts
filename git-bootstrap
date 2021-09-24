@@ -22,16 +22,16 @@ git init
 # git remote remove origin
 # git remote add origin https://<auth_token>@github.com/<username>/<repo>.git
 echo "Cloning the main AWS common repo..."
-git clone https://github.com/louislef299/AWS_Environments.git
+git clone https://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@github.com/louislef299/AWS_Environments.git
 
 echo "Cloning the resources repo..."
-git clone https://github.com/louislef299/terraform-aws-resources.git
+git clone https://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@github.com/louislef299/terraform-aws-resources.git
 
 echo "Cloning the EC2 repo..."
-git clone https://github.com/louislef299/terraform-aws-ec2.git
+git clone https://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@github.com/louislef299/terraform-aws-ec2.git
 
 echo "Cloning the VPC repo..."
-git clone https://github.com/louislef299/terraform-aws-vpc.git
+git clone https://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@github.com/louislef299/terraform-aws-vpc.git
 
 echo "All resources added and provided!"
 echo "If you would like to see where the code is located, go to Finder and select Documents. There, you should find the littleBitta directory."
