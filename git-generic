@@ -34,3 +34,6 @@ generic_add
 
 cd ${AWSDIR}/terraform-aws-vpc
 generic_add
+
+cd ${AWSDIR}/terraform-aws-security-groups
+generic_add

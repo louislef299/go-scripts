@@ -1,5 +1,5 @@
 #!/bin/bash
-vpc="vpc-xxxxxxxxxxxxx" 
+vpc="vpc-0d0f9c03cd81126c9" 
 aws ec2 describe-internet-gateways --filters 'Name=attachment.vpc-id,Values='$vpc | grep InternetGatewayId
 aws ec2 describe-subnets --filters 'Name=vpc-id,Values='$vpc | grep SubnetId
 aws ec2 describe-route-tables --filters 'Name=vpc-id,Values='$vpc | grep RouteTableId
@@ -12,3 +12,5 @@ aws ec2 describe-instances --filters 'Name=vpc-id,Values='$vpc | grep InstanceId
 aws ec2 describe-vpn-connections --filters 'Name=vpc-id,Values='$vpc | grep VpnConnectionId
 aws ec2 describe-vpn-gateways --filters 'Name=attachment.vpc-id,Values='$vpc | grep VpnGatewayId
 aws ec2 describe-network-interfaces --filters 'Name=vpc-id,Values='$vpc | grep NetworkInterfaceId
+
+# Probably need to change the vpc id
