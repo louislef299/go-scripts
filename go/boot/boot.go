@@ -52,10 +52,12 @@ func Boot(bootArgs []string) {
 		}
 
 		bootPathFrom := fmt.Sprintf("%v/%v", workingDir, bootFile)
-		bootPathTo := fmt.Sprintf("/Users/louis/.boot/%v", bootFile)
+		homeDir, err := os.UserHomeDir()
+		CheckError(err)
+		bootPathTo := fmt.Sprintf("%v/.boot/%v", homeDir, bootFile)
 		err = os.Rename(bootPathFrom, bootPathTo)
 		CheckError(err)
-		fmt.Println("Booted", bootFile)
+		fmt.Println("Booted", bootFile, "to", bootPathTo)
 	}
 }
 
@@ -86,9 +88,11 @@ func BootRecover(bootArgs []string) {
 			continue
 		}
 
-		bootPathFrom := fmt.Sprintf("/Users/louis/.boot/%v", bootFile)
+		homeDir, err := os.UserHomeDir()
+		CheckError(err)
+		bootPathFrom := fmt.Sprintf("%v/.boot/%v", homeDir, bootFile)
 		bootPathTo := fmt.Sprintf("%v/%v", workingDir, bootFile)
-		err := os.Rename(bootPathFrom, bootPathTo)
+		err = os.Rename(bootPathFrom, bootPathTo)
 		CheckError(err)
 		fmt.Println("Recovered", bootFile)
 	}
