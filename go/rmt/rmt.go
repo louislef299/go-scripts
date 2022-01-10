@@ -10,21 +10,18 @@ import (
 	"strings"
 )
 
-/*
- * Usage: rmt
- * Function: Removes all files with tildas
- * Options:
- * -i Interactive mode
- */
-
 func main() {
 	interactive := flag.Bool("i", false, "Interactive Mode")
+	help := flag.Bool("help", false, "Print guide for how to use rmt")
+	h := flag.Bool("h", false, "Print guide for how to use rmt")
 	flag.Parse()
 
 	files := ListDir()
 
 	if *interactive {
 		InterRemoveFiles(files)
+	} else if *h || *help {
+		Help()
 	} else {
 		RemoveFiles(files)
 	}
@@ -82,4 +79,11 @@ func CheckError(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func Help() {
+	fmt.Println("Removes all files containing a tilda from the current working directory")
+	fmt.Printf("\nUsage: rmt [ -i | -help ]\n\n")
+	fmt.Println("-i: Interactive mode, type y to delete files")
+	fmt.Println("-help | -h: Prints out usage of rmt")
 }
