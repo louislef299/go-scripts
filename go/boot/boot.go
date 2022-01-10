@@ -62,7 +62,9 @@ func Boot(bootArgs []string) {
 }
 
 func BootList() {
-	files, err := ioutil.ReadDir("/Users/louis/.boot")
+	homeDir, err := os.UserHomeDir()
+	CheckError(err)
+	files, err := ioutil.ReadDir(fmt.Sprintf("%v/.boot", homeDir))
 	CheckError(err)
 
 	if len(files) == 0 {
@@ -81,15 +83,15 @@ func BootRecover(bootArgs []string) {
 	CheckError(err)
 
 	for _, bootFile := range bootArgs {
-		bootPath := "/Users/louis/.boot"
+		homeDir, err := os.UserHomeDir()
+		CheckError(err)
+		bootPath := fmt.Sprintf("%v/.boot", homeDir)
 		exists := DoesFileExist(bootFile, bootPath)
 		if !exists {
 			fmt.Println("Could not find file", bootFile, "in", bootPath, "to recover!")
 			continue
 		}
 
-		homeDir, err := os.UserHomeDir()
-		CheckError(err)
 		bootPathFrom := fmt.Sprintf("%v/.boot/%v", homeDir, bootFile)
 		bootPathTo := fmt.Sprintf("%v/%v", workingDir, bootFile)
 		err = os.Rename(bootPathFrom, bootPathTo)
@@ -99,13 +101,15 @@ func BootRecover(bootArgs []string) {
 }
 
 func BootRecoverAll() {
-	files, err := ioutil.ReadDir("/Users/louis/.boot")
+	homeDir, err := os.UserHomeDir()
+	CheckError(err)
+	files, err := ioutil.ReadDir(fmt.Sprintf("%v/.boot", homeDir))
 	CheckError(err)
 	workingDir, err := os.Getwd()
 	CheckError(err)
 
 	for _, file := range files {
-		bootPathFrom := fmt.Sprintf("/Users/louis/.boot/%v", file.Name())
+		bootPathFrom := fmt.Sprintf("%v/.boot/%v", homeDir, file.Name())
 		bootPathTo := fmt.Sprintf("%v/%v", workingDir, file.Name())
 		err := os.Rename(bootPathFrom, bootPathTo)
 		CheckError(err)
