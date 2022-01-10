@@ -1,0 +1,9 @@
+#!/bin/bash
+
+## This command is to recover files that were previously booted
+
+if [[ -z $1 ]]; then
+    echo "Usage: boot-recover <file>"
+fi
+
+mv ~/.boot/$1 .

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ -z "$1" ]]; then
+    echo "usage: state-show <file> <optional-grep>"
+    exit 1
+fi
+
+echo "Start!"
+while read p; do
+    if [[ -z "$2" ]]; then
+	terraform state show "${p}" &
+    else
+	terraform state show "${p}" | grep "$2" &
+    fi
+done <$1

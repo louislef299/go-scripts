@@ -1,0 +1,6 @@
+#!/bin/bash                                                                    
+
+cd ${HOME}/Documents/journal/working
+
+# To see usage, look at cdaily                                                  
+

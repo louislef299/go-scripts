@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd ${HOME}/Documents/git-MDTCRHF
+
+# To see usage, look at cdaily

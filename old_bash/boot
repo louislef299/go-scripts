@@ -1,0 +1,10 @@
+#!/bin/bash
+
+## This program was created to quick boot and recover
+## files that should not exist in a repo
+
+if [[ -z $1 ]]; then
+    echo "Usage: boot <file>"
+fi
+
+mv $1 ~/.boot/.

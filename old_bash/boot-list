@@ -1,0 +1,5 @@
+#!/bin/bash
+
+## Used to list all the items in the .boot repo
+
+ls ~/.boot
