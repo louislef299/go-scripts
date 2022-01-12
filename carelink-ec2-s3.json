@@ -1,0 +1,75 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "s3:ListAllMyBuckets",
+            "Resource": "*",
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "s3:GetObject",
+                "s3:GetObjectTagging",
+                "s3:GetObjectVersion",
+                "s3:GetObjectVersionTagging",
+                "s3:GetObjectAcl",
+                "s3:GetObjectVersionAcl",
+                "s3:PutObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::carelink-pre-dev-us-east-1-source/*",
+                "arn:aws:s3:::carelink-services-source-us-east-1/*",
+                "arn:aws:s3:::it-prod-mdt-dependencies-us-east-1/*",
+                "arn:aws:s3:::it-services-prod-mdt-dependencies-eu-central-1/*",
+                "arn:aws:s3:::carelink-{{.Environment}}-{{.Region}}-{{.SourceBucketName}}/*",
+                "arn:aws:s3:::lz-ops-prod-shared-artifacts/*",
+                "arn:aws:s3:::lz-ops-prod-shared-artifacts",
+                "arn:aws:s3:::lz-ops-prod-shared-artifacts-replica/*",
+                "arn:aws:s3:::lz-ops-prod-shared-artifacts-replica"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "s3:ListBucket",
+                "s3:ListBucketVersions"
+            ],
+            "Resource": [
+                "arn:aws:s3:::carelink-services-source-us-east-1",
+                "arn:aws:s3:::carelink-pre-dev-us-east-1-source",
+                "arn:aws:s3:::it-prod-mdt-dependencies-us-east-1",
+                "arn:aws:s3:::it-services-prod-mdt-dependencies-eu-central-1",
+                "arn:aws:s3:::carelink-{{.Environment}}-{{.Region}}-{{.SourceBucketName}}",
+                "arn:aws:s3:::lz-ops-prod-shared-artifacts/*",
+                "arn:aws:s3:::lz-ops-prod-shared-artifacts",
+                "arn:aws:s3:::lz-ops-prod-shared-artifacts-replica/*",
+                "arn:aws:s3:::lz-ops-prod-shared-artifacts-replica"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "s3:PutObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::carelink-{{.Environment}}-{{.Region}}-{{.SourceBucketName}}/*"
+            ],
+            "Effect": "Allow"
+        },
+        {
+            "Action": [
+                "kms:Encrypt",
+                "kms:Decrypt",
+                "kms:ReEncrypt*",
+                "kms:GenerateDataKey*",
+                "kms:DescribeKey*"
+            ],
+            "Resource": [
+                "arn:aws:kms:{{.Region}}:{{.AccountId}}:alias/{{.S3KmsKeyName}}",
+                "arn:aws:kms:us-east-1:050061447862:key/c328d942-a23b-450e-9039-e6bd37f78015",
+                "arn:aws:kms:eu-central-1:050061447862:key/0fec39ed-fb31-46fa-b2cc-2b5c1a7ccc7e"
+            ],
+            "Effect": "Allow"
+        }
+    ]
+}
