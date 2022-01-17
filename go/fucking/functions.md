@@ -18,3 +18,4 @@ This script makes it easy to work with docker in a repetitive manner. Docker has
 - [Learn Docker in 100 seconds](https://www.youtube.com/watch?v=Gjnup-PuquQ)
 - [Advanced Docker](https://www.youtube.com/watch?v=gAkwW2tuIqE)
 - [Learn Go in 100 seconds](https://www.youtube.com/watch?v=446E-r0rXHI)
+- [Docker Cheat Sheet](https://www.docker.com/sites/default/files/d8/2019-09/docker-cheat-sheet.pdf)

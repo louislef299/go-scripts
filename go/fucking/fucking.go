@@ -8,7 +8,6 @@ import (
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
-	"github.com/docker/docker/pkg/stdcopy"
 )
 
 func main() {
@@ -16,7 +15,7 @@ func main() {
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	CheckError(err)
 
-	imageName := "docker.io/library/alpine"
+	imageName := "docker.io/library/ubuntu"
 
 	reader, err := cli.ImagePull(ctx, imageName, types.ImagePullOptions{})
 	CheckError(err)
@@ -25,9 +24,9 @@ func main() {
 	io.Copy(os.Stdout, reader)
 
 	resp, err := cli.ContainerCreate(ctx, &container.Config{
-		Image: "alpine",
+		Image: "ubuntu",
 		Cmd:   []string{"echo", "hello world"},
-		Tty:   false,
+		Tty:   true,
 	}, nil, nil, nil, "")
 	CheckError(err)
 
@@ -35,7 +34,7 @@ func main() {
 	CheckError(err)
 
 	// Take this out to run in the background
-	statusCh, errCh := cli.ContainerWait(ctx, resp.ID, container.WaitConditionNotRunning)
+	/*statusCh, errCh := cli.ContainerWait(ctx, resp.ID, container.WaitConditionNotRunning)
 	select {
 	case err := <-errCh:
 		CheckError(err)
@@ -45,7 +44,7 @@ func main() {
 	out, err := cli.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{ShowStdout: true})
 	CheckError(err)
 
-	stdcopy.StdCopy(os.Stdout, os.Stderr, out)
+	stdcopy.StdCopy(os.Stdout, os.Stderr, out)*/
 }
 
 func CheckError(err error) {
