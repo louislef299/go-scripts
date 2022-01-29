@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"os"
+	"time"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
@@ -32,6 +34,30 @@ func main() {
 
 	err = cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{})
 	CheckError(err)
+
+	command := []string{"/bin/bash"}
+
+	configCreate := types.ExecConfig{
+		AttachStderr: true,
+		AttachStdout: true,
+		Cmd:          command,
+	}
+
+	respC, err := cli.ContainerExecCreate(ctx, resp.ID, configCreate)
+	CheckError(err)
+	fmt.Println("Creation response:", respC.ID)
+
+	config := types.ExecStartCheck{
+		Detach: true,
+		Tty:    true,
+	}
+
+	time.Sleep(2)
+
+	respA, err := cli.ContainerExecAttach(ctx, respC.ID, config)
+	CheckError(err)
+
+	fmt.Println("Response output:", respA)
 
 	/*
 		// Take this out to run in the background
