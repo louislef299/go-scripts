@@ -6,6 +6,17 @@
     - This function just creates a docker image and connects to it with exec
     - If there is another parameter, that will be the image pulled by docker
     - Otherwise, just use the ubuntu image
+
+    Here is what I need from you:
+    - I want to be able to add a flags to this command
+    - Instead of having $1 and $2 I want to use flags
+      - For instance: -name or -image or -saveOnClose
+    - After you implemented the flags, I wan to save the container when I close 
+      the session and kill/delete the container
+      - For this, use the following docker commands:
+        * docker kill
+        * docker rm
+      - Use --help to learn more about the command options
 *--------
 '''
 if [[ -z "$1" ]]; then
