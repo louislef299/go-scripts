@@ -3,9 +3,9 @@
 '''
 *--------
     Hey Pfeff
-    - This function just creates a docker image and connects to it with exec
-    - If there is another parameter, that will be the image pulled by docker
-    - Otherwise, just use the ubuntu image
+      This function just creates a docker image and connects to it with exec
+      If there is another parameter, that will be the image pulled by docker
+      Otherwise, just use the ubuntu image
 
     Here is what I need from you:
     - I want to be able to add a flags to this command
