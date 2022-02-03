@@ -12,7 +12,7 @@
     - Instead of having $1 and $2 I want to use flags
       - For instance: -name or -image or -saveOnClose
     - After you implement the flags, I want to save the container when I close 
-      the session and kill/delete the container
+      the session and kill/delete the container, all with a flag -saveOnClose
       - For this, use the following docker commands:
         * docker kill
         * docker rm
