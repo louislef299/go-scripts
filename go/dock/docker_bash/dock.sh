@@ -20,7 +20,7 @@
 *--------
 '''
 if [[ -z "$1" ]]; then
-    echo "usage: fucking-init <container-name> <image>"
+    echo "usage: dock <container-name> <image>"
     return
 fi
 

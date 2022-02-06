@@ -1,23 +1,23 @@
-# The ***Fucking*** Project
+# The ***Dock*** Project
 
 This script makes it easy to work with docker in a repetitive manner. Docker has a lot of different functionalities, but the goal is to make it easy enough to work as a simple file system that is isolated from the root file system. We will be utilizing the docker API and golang to create this function.
 
 ## Functions
 
-- `fucking -init`: This creates a new container with an ubuntu image
+- `dock -init`: This creates a new container with an ubuntu image
   - Relevant docker commands:
     1. docker run --name <optional-name> -dt ubuntu
     2. docker exec -it <optional-name> "/bin/bash"
-- `fucking -new=<image>`: Create a new container with a given image
+- `dock -new=<image>`: Create a new container with a given image
     1. docker run --name <optional-name> -dt <image>
     2. docker exec -it <optional-name> "/bin/bash"
-- `fucking -restore=<imageID>`: Restores a saved container session
-- `fucking -list`: Lists all active containers
+- `dock -restore=<imageID>`: Restores a saved container session
+- `dock -list`: Lists all active containers
     1. docker ps -a
-- `fucking -save`: Saves the current container environment
-- `fucking -saveAndClose`: Saves the environment and shuts it down
-- `fucking -listSaved`: Lists all of your saved sessions and when they were committed
-- `fucking -kill=<containerID>`: Kills a running container. `***WARNING***` *If* you kill a container and it was not saved, you will lose any progress made on the container. 
+- `dock -save`: Saves the current container environment
+- `dock -saveAndClose`: Saves the environment and shuts it down
+- `dock -listSaved`: Lists all of your saved sessions and when they were committed
+- `dock -kill=<containerID>`: Kills a running container. `***WARNING***` *If* you kill a container and it was not saved, you will lose any progress made on the container. 
     1. docker kill <containerID>
     2. docker rm <containerID>
 
