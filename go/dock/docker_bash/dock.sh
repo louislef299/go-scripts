@@ -1,6 +1,6 @@
 #!/bin/bash
 
-'''
+<<comment
 *--------
     Hey Pfeff
       This function just creates a docker image and connects to it with exec
@@ -18,7 +18,8 @@
         * docker rm
       - Use --help to learn more about the command options
 *--------
-'''
+comment
+
 init_flag = '' # -i
 new_flag = '' # -n
 restore_flag = '' # -r
@@ -39,9 +40,6 @@ init() {
   docker exec -it $1 "/bin/bash"
 }
 
-new()
-
-
 while getopts 'in:r:lsxak:' flag; do
   case "${flag}" in
     i) init_flag='true' ;;
@@ -58,5 +56,7 @@ while getopts 'in:r:lsxak:' flag; do
   esac
 done
 
+<<comm
 docker run --name $1 -dt $2
 docker exec -it $1 "/bin/bash"
+comm
