@@ -27,11 +27,19 @@ save_flag = '' # -s
 saveAndClose_flag = '' # -x
 listSaved_flag = '' # -a
 kill_flag = '' # -k
+verbose = '' # -v
 
 print_usage() {
     echo "usage: dock <container-name> <image>"
     return
 }
+
+init() {
+  docker run --name $1 -dt ubuntu
+  docker exec -it $1 "/bin/bash"
+}
+
+new()
 
 
 while getopts 'in:r:lsxak:' flag; do
@@ -39,17 +47,16 @@ while getopts 'in:r:lsxak:' flag; do
     i) init_flag='true' ;;
     n) new_flag="${OPTARG}" ;;
     r) restore_flag="${OPTARG}" ;;
+    l) list_flag = 'true' ;;
+    s) save_flag = 'true' ;;
+    x) saveAndClose_flag = 'true' ;;
+    a) listSaved_flag = 'true' ;;
+    k) kill_flag = "${OPTARG}" ;;
     v) verbose='true' ;;
     *) print_usage
        exit 1 ;;
   esac
 done
-
-if [[ -z "$2" ]]; then
-    docker run --name $1 -dt ubuntu
-    docker exec -it $1 "/bin/bash"
-    return
-fi
 
 docker run --name $1 -dt $2
 docker exec -it $1 "/bin/bash"
