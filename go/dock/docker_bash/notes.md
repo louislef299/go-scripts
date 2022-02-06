@@ -9,3 +9,7 @@ Here is a more in-depth description of how the `getopts` command differs from th
 ## Priority two: How to set up our dock commands in bash
 
 This will work differently than how we were setting up our go function in that everything will live in one file. This kinda sucks for readability, but it will have to do. [Here is an article](https://linuxize.com/post/bash-functions/#passing-arguments-to-bash-functions) that outlines how to use bash functions. Passing parameters to functions works differently from other languages than python, but it pretty similar to how we gathered our commands before using flags, i.e. `$1`. Functions have to exist before they are called in the file however, so we will define all of our functions before the brains of the `dock` command begin to parse the flags and run functions.
+
+## Priority three: How to prompt a user for inputs
+
+We will have some commands that require multiple inputs from a user, so how will we go about getting those inputs? It seems like it would be overkill and a bit harder to have multiple inputs from the flag, so we will just gather input from the user using the `read` command. [Here is an article](https://ryanstutorials.net/bash-scripting-tutorial/bash-input.php) explaining how to gather input from a user in bash. It is pretty straight forward.

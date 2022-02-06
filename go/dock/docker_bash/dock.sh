@@ -30,6 +30,12 @@ init() {
   docker exec -it $1 "/bin/bash"
 }
 
+new() {
+  echo "What image would you like to use?"
+  read image
+  echo "Starting $1 with image $image"
+}
+
 while getopts 'i:n:r:lsxak:' flag; do
   case "${flag}" in
     i) 
@@ -37,7 +43,7 @@ while getopts 'i:n:r:lsxak:' flag; do
       echo "Init"
       ;;
     n) 
-      new_flag="${OPTARG}" 
+      new ${OPTARG}
       ;;
     r) 
       restore_flag="${OPTARG}" 
