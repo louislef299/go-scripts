@@ -20,16 +20,6 @@
 *--------
 comment
 
-init_flag = '' # -i
-new_flag = '' # -n
-restore_flag = '' # -r
-list_flag = '' # -l
-save_flag = '' # -s
-saveAndClose_flag = '' # -x
-listSaved_flag = '' # -a
-kill_flag = '' # -k
-verbose = '' # -v
-
 print_usage() {
     echo "usage: dock <container-name> <image>"
     return
@@ -40,19 +30,40 @@ init() {
   docker exec -it $1 "/bin/bash"
 }
 
-while getopts 'in:r:lsxak:' flag; do
+while getopts 'i:n:r:lsxak:' flag; do
   case "${flag}" in
-    i) init_flag='true' ;;
-    n) new_flag="${OPTARG}" ;;
-    r) restore_flag="${OPTARG}" ;;
-    l) list_flag = 'true' ;;
-    s) save_flag = 'true' ;;
-    x) saveAndClose_flag = 'true' ;;
-    a) listSaved_flag = 'true' ;;
-    k) kill_flag = "${OPTARG}" ;;
-    v) verbose='true' ;;
-    *) print_usage
-       exit 1 ;;
+    i) 
+      init ${OPTARG}
+      echo "Init"
+      ;;
+    n) 
+      new_flag="${OPTARG}" 
+      ;;
+    r) 
+      restore_flag="${OPTARG}" 
+      ;;
+    l) 
+      list_flag = 'true' 
+      ;;
+    s) 
+      save_flag = 'true' 
+      ;;
+    x) 
+      saveAndClose_flag = 'true' 
+      ;;
+    a) 
+      listSaved_flag = 'true' 
+      ;;
+    k) 
+      kill_flag = "${OPTARG}" 
+      ;;
+    v) 
+      verbose='true' 
+      ;;
+    *) 
+      print_usage
+      exit 1 
+      ;;
   esac
 done
 
