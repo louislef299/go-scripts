@@ -19,10 +19,31 @@
       - Use --help to learn more about the command options
 *--------
 '''
-if [[ -z "$1" ]]; then
+init_flag = '' # -i
+new_flag = '' # -n
+restore_flag = '' # -r
+list_flag = '' # -l
+save_flag = '' # -s
+saveAndClose_flag = '' # -x
+listSaved_flag = '' # -a
+kill_flag = '' # -k
+
+print_usage() {
     echo "usage: dock <container-name> <image>"
     return
-fi
+}
+
+
+while getopts 'in:r:lsxak:' flag; do
+  case "${flag}" in
+    i) init_flag='true' ;;
+    n) new_flag="${OPTARG}" ;;
+    r) restore_flag="${OPTARG}" ;;
+    v) verbose='true' ;;
+    *) print_usage
+       exit 1 ;;
+  esac
+done
 
 if [[ -z "$2" ]]; then
     docker run --name $1 -dt ubuntu
