@@ -26,6 +26,7 @@ print_usage() {
 }
 
 init() {
+  
   docker run --name $1 -dt ubuntu
   docker exec -it $1 "/bin/bash"
 }
@@ -33,7 +34,7 @@ init() {
 new() {
   echo "What image would you like to use?"
   read image
-  echo "Starting $1 with image $image"
+  echo "Starting $1 with image $image..."
 }
 
 while getopts 'i:n:r:lsxak:' flag; do
