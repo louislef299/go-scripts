@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// The circuit type allows for utilization throughout the package
 type Ciruit func(context.Context) (string, error)
 
 // Uses uint to force a positive number? I can see potential errors with that...

@@ -26,7 +26,6 @@ print_usage() {
 }
 
 init() {
-  
   docker run --name $1 -dt ubuntu
   docker exec -it $1 "/bin/bash"
 }
