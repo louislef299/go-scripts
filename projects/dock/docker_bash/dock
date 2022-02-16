@@ -19,13 +19,28 @@
       - Use --help to learn more about the command options
 *--------
 comment
+storageDir=".dock_storage"
 
 print_usage() {
     echo "usage: dock <container-name> <image>"
     return
 }
 
+<<comm
+  These two functions are where we will store any temp files we need
+  to perform actions based on output.
+comm
+start_up() {
+  mkdir $storageDir
+  echo "Creating hidden storage directory $storageDir to save temporary files"
+}
+clean_up() {
+  rm -rf $storageDir
+  echo "Removing $storageDir and all associated files"
+}
+
 init() {
+  echo "Starting up container $1 and attaching to it..."
   docker run --name $1 -dt ubuntu
   docker exec -it $1 "/bin/bash"
 }
@@ -34,13 +49,26 @@ new() {
   echo "What image would you like to use?"
   read image
   echo "Starting $1 with image $image..."
+  docker run --name $1 -dt $image
+  echo "Attempting to attach to container $1..."
+  docker exec -it $1 "/bin/bash"
 }
 
-while getopts 'i:n:r:lsxak:' flag; do
+kill_all() {
+  echo "Kill them all!"
+  tmpFile="dockq$RANDOM.txt"
+  docker ps -aq > "$storageDir/$tmpFile"
+  while read -r containerID; do
+    echo "Killing & removing docker container $containerID..."
+    docker kill $containerID && docker rm $containerID
+  done < "$storageDir/$tmpFile"
+}
+
+start_up
+while getopts 'i:n:r:lsxak:q' flag; do
   case "${flag}" in
     i) 
       init ${OPTARG}
-      echo "Init"
       ;;
     n) 
       new ${OPTARG}
@@ -63,6 +91,15 @@ while getopts 'i:n:r:lsxak:' flag; do
     k) 
       kill_flag = "${OPTARG}" 
       ;;
+    q)
+      echo "Please type \"yes\" to destroy all existing, running containers: "
+      read line
+      echo 
+      if [[ $line == "yes" || $line == "y" ]]; then
+        echo "Destroying containers..."
+        kill_all
+      fi
+      ;;
     v) 
       verbose='true' 
       ;;
@@ -72,6 +109,7 @@ while getopts 'i:n:r:lsxak:' flag; do
       ;;
   esac
 done
+clean_up
 
 <<comm
 docker run --name $1 -dt $2
