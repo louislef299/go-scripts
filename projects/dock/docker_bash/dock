@@ -31,21 +31,21 @@ print_usage() {
   to perform actions based on output.
 comm
 start_up() {
-  mkdir $storageDir
   echo "Creating hidden storage directory $storageDir to save temporary files"
+  mkdir $storageDir
 }
 clean_up() {
-  rm -rf $storageDir
   echo "Removing $storageDir and all associated files"
+  rm -rf $storageDir
 }
 
-init() {
+init() { # dock -i <container-name>
   echo "Starting up container $1 and attaching to it..."
   docker run --name $1 -dt ubuntu
   docker exec -it $1 "/bin/bash"
 }
 
-new() {
+new() { # dock -n <container-name>
   echo "What image would you like to use?"
   read image
   echo "Starting $1 with image $image..."
@@ -54,14 +54,51 @@ new() {
   docker exec -it $1 "/bin/bash"
 }
 
-kill_all() {
+kill() { # dock -k <containerID || containerName>
+  docker ps -a | grep $1 > /dev/null
+  if [[ $? -ne 0 ]]; then
+    echo "Container doesn't exist! Exiting...."
+    return
+  fi
+  
+  docker ps | grep $1 > /dev/null
+  if [[ $? -eq 0 ]]; then 
+    echo "Killing and removing container $1..."
+    docker kill $1 > /dev/null
+    docker rm $1 > /dev/null
+  else
+    echo "Removing container $1..."
+    docker rm $1 > /dev/null
+  fi
+
+  if [[ $? -ne 0 ]]; then 
+    echo "Something went wrong..."
+  fi
+}
+
+kill_all() { # dock -q
   echo "Kill them all!"
   tmpFile="dockq$RANDOM.txt"
   docker ps -aq > "$storageDir/$tmpFile"
   while read -r containerID; do
-    echo "Killing & removing docker container $containerID..."
-    docker kill $containerID && docker rm $containerID
+    docker ps -q | grep $containerID > /dev/null
+    if [[ $? -eq 0 ]]; then 
+      echo "Killing & removing docker container $containerID..."
+      docker kill $containerID > /dev/null 
+      docker rm $containerID > /dev/null
+    else
+      docker ps -aq | grep $containerID > /dev/null
+      if [[ $? -eq 0 ]]; then 
+        echo "Removing docker container $containerID..."
+        docker rm $containerID > /dev/null
+      else
+        echo "Container does not exist. This shouldn't happen."
+      fi
+    fi
   done < "$storageDir/$tmpFile"
+  if [[ $? -ne 0 ]]; then
+    echo "Something went wrong..."
+  fi
 }
 
 start_up
@@ -89,14 +126,15 @@ while getopts 'i:n:r:lsxak:q' flag; do
       listSaved_flag = 'true' 
       ;;
     k) 
-      kill_flag = "${OPTARG}" 
+      kill ${OPTARG}
       ;;
     q)
+      echo "The following containers will be deleted:"
+      docker ps -a
       echo "Please type \"yes\" to destroy all existing, running containers: "
       read line
       echo 
       if [[ $line == "yes" || $line == "y" ]]; then
-        echo "Destroying containers..."
         kill_all
       fi
       ;;
