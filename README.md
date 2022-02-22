@@ -32,4 +32,4 @@ These are just some bash scripts that I use on my local device. The most used ar
 33 directories, 46 files
 ```
 
-This is the current layout of the repo. It is pretty self-explanitory, but the refer to the README in each to learn more.
+This is the current layout of the repo. It is pretty self-explanatory, but the refer to the README in each to learn more.
