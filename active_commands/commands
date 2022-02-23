@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ls ~/.bash
+ls ~/.bash/active_commands
