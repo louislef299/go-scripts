@@ -10,6 +10,8 @@ import (
 	"strings"
 )
 
+/*** OLD FUNCTION NOT USED ANYMORE REFER TO COBRA DIRECTORY ***/
+
 func main() {
 	interactive := flag.Bool("i", false, "Interactive Mode")
 	help := flag.Bool("help", false, "Print guide for how to use rmt")
