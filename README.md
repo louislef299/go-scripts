@@ -1,6 +1,6 @@
-# Simple Bash Scripts
+# Simple Scripts
 
-These are just some bash scripts that I use on my local device. The most used are boot and rmt. Look around!
+These are just some scripts that I use on my local device. The most used are boot and rmt. Look around!
 
 ![Go Gopher Dancing]("./../.images/gopher-dance-long-3x.gif)
 
@@ -22,11 +22,7 @@ These are just some bash scripts that I use on my local device. The most used ar
     ├── boot
     ├── cloud-native-go
     ├── dock
-    ├── flag
-    ├── go.mod
-    ├── go.sum
     ├── got
-    ├── jsonencode
     ├── rmt
     └── side_stuff
 33 directories, 46 files
