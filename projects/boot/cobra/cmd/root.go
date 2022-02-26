@@ -25,7 +25,7 @@ For example:
 
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			fmt.Println("Usage: boot <files>")
+			fmt.Println("Usage: boot <files> or boot -h for help")
 			return
 		}
 
