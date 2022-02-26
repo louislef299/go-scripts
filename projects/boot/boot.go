@@ -8,6 +8,8 @@ import (
 	"os"
 )
 
+/*** OLD FUNCTION NOT USED ANYMORE REFER TO COBRA DIRECTORY ***/
+
 func main() {
 	recover := flag.Bool("recover", false, "What file to recover from boot library")
 	r := flag.Bool("r", false, "What file to recover from boot library")
