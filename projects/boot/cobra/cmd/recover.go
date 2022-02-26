@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -20,8 +21,27 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
+	Aliases: []string{"rec"},
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("recover called")
+		workingDir, err := os.Getwd()
+		CheckError(err)
+
+		for _, bootFile := range args {
+			homeDir, err := os.UserHomeDir()
+			CheckError(err)
+			bootPath := fmt.Sprintf("%v/.boot", homeDir)
+			exists := DoesFileExist(bootFile, bootPath)
+			if !exists {
+				fmt.Println("Could not find file", bootFile, "in", bootPath, "to recover!")
+				continue
+			}
+
+			bootPathFrom := fmt.Sprintf("%v/.boot/%v", homeDir, bootFile)
+			bootPathTo := fmt.Sprintf("%v/%v", workingDir, bootFile)
+			err = os.Rename(bootPathFrom, bootPathTo)
+			CheckError(err)
+			fmt.Println("Recovered", bootFile)
+		}
 	},
 }
 

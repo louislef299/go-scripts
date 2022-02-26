@@ -24,6 +24,11 @@ For example:
 	* boot recover <file>`,
 
 	Run: func(cmd *cobra.Command, args []string) {
+		if len(args) == 0 {
+			fmt.Println("Usage: boot <files>")
+			return
+		}
+
 		workingDir, err := os.Getwd()
 		CheckError(err)
 
@@ -50,21 +55,22 @@ For example:
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	err := rootCmd.Execute()
-	if err != nil {
-		os.Exit(1)
+	// Check if there is an existing command
+	cmd, _, err := rootCmd.Find(os.Args[1:])
+	if err != nil || cmd == nil {
+		// Not found
+		args := os.Args[1:]
+		rootCmd.SetArgs(args)
+		rootCmd.Run(rootCmd, args)
+	} else {
+		err = rootCmd.Execute()
+		if err != nil {
+			os.Exit(1)
+		}
 	}
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.boot.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
