@@ -5,7 +5,9 @@ Copyright © 2022 Louis Lefebvre <lefeb073@umn.com>
 package cmd
 
 import (
+	"fmt"
 	"os"
+	"runtime/debug"
 
 	"github.com/spf13/cobra"
 )
@@ -46,4 +48,12 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func CheckError(err error) {
+	if err != nil {
+		fmt.Println(err)
+		debug.PrintStack()
+		os.Exit(1)
+	}
 }
