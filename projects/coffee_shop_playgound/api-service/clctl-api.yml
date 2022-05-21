@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: clctl-api
+  name: clctl-api
+spec:
+  containers:
+  - image: 405958585766.dkr.ecr.us-east-1.amazonaws.com/clctl-api
+    name: clctl-api
+    imagePullPolicy: Always
+    resources: {}
+  imagePullSecrets:
+    - name: regcred
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
