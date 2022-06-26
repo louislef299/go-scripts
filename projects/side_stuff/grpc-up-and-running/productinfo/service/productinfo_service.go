@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/gofrs/uuid"
-	pb "github.com/louislef299/bash/projects/side_stuff/grpc-up-and-running/productinfo/service/ecommerce"
+	pb "github.com/louislef299/bash/projects/side_stuff/grpc-up-and-running/productinfo/ecommerce"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -12,6 +12,7 @@ import (
 // server is used to implement ecommerce/product_info
 type server struct {
 	productMap map[string]*pb.Product
+	pb.UnimplementedProductInfoServer
 }
 
 // AddProduct implements ecommerce.AddProduct
