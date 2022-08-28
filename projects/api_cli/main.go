@@ -7,7 +7,7 @@ package main
 import (
 	"os"
 
-	"github.com/louislef299/mlctl/cmd"
+	"github.com/louislef299/bash/projects/mlctl/cmd"
 )
 
 func main() {
