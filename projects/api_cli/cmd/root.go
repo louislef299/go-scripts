@@ -32,7 +32,9 @@ func NewCmdRoot() *cobra.Command {
 	to quickly create a Cobra application.`,
 		Version: version.String(),
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			Log = mdtlog.SetLogLevel(strings.ToUpper(logLvl), logFile)
+			lvl := levelPrecedence(logLvl)
+			Log = mdtlog.SetLogLevel(lvl, logFile)
+			Log.Trace.Println("loglevel", lvl)
 		},
 	}
 
@@ -79,5 +81,24 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatal("could not locate the config file")
+	}
+}
+
+// Compares the environment variable to the user flag to find which log level to choose.
+// The lowest log level takes precedence.
+func levelPrecedence(lvl string) string {
+	viperLvl := viper.Get("loglvl")
+	usrLvl := strings.ToUpper(lvl)
+	switch {
+	case viperLvl == "TRACE" || usrLvl == "TRACE":
+		return "TRACE"
+	case viperLvl == "INFO" || usrLvl == "INFO":
+		return "INFO"
+	case viperLvl == "WARNING" || usrLvl == "WARNING":
+		return "WARNING"
+	case viperLvl == "ERROR" || usrLvl == "ERROR":
+		return "ERROR"
+	default:
+		return usrLvl
 	}
 }
