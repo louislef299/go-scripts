@@ -11,6 +11,7 @@ import (
 	pb "github.com/louislef299/bash/projects/mlctl/api/v1"
 	"github.com/louislef299/bash/projects/mlctl/server"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 )
 
@@ -42,6 +43,10 @@ func startServer() {
 	}
 	s := grpc.NewServer()
 	pb.RegisterRecordServer(s, &server.Server{})
+
+	Log.Info.Printf("setting server address to %v in config file", lis.Addr().String())
+	viper.Set("server.address", lis.Addr().String())
+	viper.WriteConfig()
 
 	Log.Info.Printf("Starting gRPC listener on port %d", port)
 	if err := s.Serve(lis); err != nil {
