@@ -19,6 +19,11 @@ var (
 	ErrorNoSuchKey = errors.New("no such key")
 )
 
+type TransactionLogger interface {
+	WritePut(key, value string)
+	WriteDelete(key string)
+}
+
 func Put(key, value string) error {
 	store.Lock()
 	store.m[key] = value
