@@ -1,6 +1,12 @@
 package main
 
-import "errors"
+import (
+	"errors"
+	"log"
+	"net/http"
+
+	"github.com/gorilla/mux"
+)
 
 var (
 	store = make(map[string]string)
@@ -24,4 +30,14 @@ func Get(key string) (string, error) {
 func Delete(key string) error {
 	delete(store, key)
 	return nil
+}
+
+func helloMuxHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("Hello gorilla/mux!\n"))
+}
+
+func main() {
+	r := mux.NewRouter()
+	r.HandleFunc("/", helloMuxHandler)
+	log.Fatal(http.ListenAndServe(":8080", r))
 }
