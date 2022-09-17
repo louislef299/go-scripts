@@ -9,7 +9,7 @@ const (
 )
 
 type Event struct {
-	Sequence  int64
+	Sequence  uint64
 	EventType EventType
 	Key       string
 	Value     string
