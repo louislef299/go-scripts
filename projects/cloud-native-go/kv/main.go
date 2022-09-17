@@ -95,7 +95,7 @@ func keyValuePutHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
-func main() {
+func serv() {
 	err := initializeTransactionLogger()
 	if err != nil {
 		log.Fatalf("couldn't initialze transaction logger correctly: %v", err)
@@ -106,6 +106,10 @@ func main() {
 	r.HandleFunc("/v1/{key}", keyValueDeleteHandler).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":8080", r))
+}
+
+func main() {
+	serv()
 }
 
 /*
