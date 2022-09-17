@@ -107,3 +107,9 @@ func main() {
 
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
+
+/*
+curl -X PUT -d 'value' -v http://localhost:8080/v1/key-a
+curl -X GET -v http://localhost:8080/v1/key-a
+curl -X Delete -v http://localhost:8080/v1/key-a
+*/
