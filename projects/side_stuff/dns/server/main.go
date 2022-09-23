@@ -21,7 +21,7 @@ func serveDNS(u *net.UDPConn, clientAddr net.Addr, request *layers.DNS) {
 	ip, ok = records[string(request.Questions[0].Name)]
 	if !ok {
 		//Todo: Log no data present for the IP and handle:todo
-		log.Println("specified record not present: %v", request)
+		log.Printf("specified record not present: %v", request)
 		return
 	}
 	a, _, _ := net.ParseCIDR(ip + "/24")
