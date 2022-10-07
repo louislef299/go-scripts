@@ -19,6 +19,11 @@ import (
  * - ping first to make sure available:
  *   ping –c 3 172.17.0.2
  * - ssh root@172.17.0.2
+ *
+ * Resources:
+ * https://linuxhint.com/golang-ssh-examples/
+ * https://github.com/inatus/ssh-client-go
+ * https://docs.docker.com/engine/reference/commandline/run/#publish-or-expose-port--p---expose
  ***/
 
 func main() {
