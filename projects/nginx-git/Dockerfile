@@ -26,3 +26,6 @@ RUN chmod -R 755 /srv/git
 
 COPY default.conf /etc/nginx/conf.d/.
 RUN htpasswd -bc /etc/nginx/.gitpasswd user foo
+
+# docker run -dp 32000:80 -v brew-lbctl-git:/srv/git/repo1 nginx-git
+# git clone http://user:foo@127.0.0.1:32000/repo1
