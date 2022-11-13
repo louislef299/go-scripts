@@ -1,0 +1,23 @@
+FROM ubuntu:latest
+
+# Run updates
+RUN apt update && apt install openssh-server sudo git -y
+
+# Add user to container and change password
+# -d is the home directory for the new user
+# -u is a specific user id
+# -g is a specific group id
+# -s is the login shell
+RUN useradd -m -s /bin/bash -g root -G sudo -u 1000 git 
+RUN  echo 'git:test' | chpasswd
+
+RUN service ssh start
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd","-D"]
+
+# docker build -t git-server .
+# docker run -dp 32000:22 --mount source=git-test,target=/home/git git-server
+# ssh -p 32000 git@127.0.0.1
+# scp -P 32000 -r clctl-infra git@127.0.0.1:/home/git
+# git clone ssh://git@127.0.0.1:32000/home/git/homebrew-clctl
