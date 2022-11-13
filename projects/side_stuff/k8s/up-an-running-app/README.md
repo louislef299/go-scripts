@@ -24,3 +24,22 @@ Ghost is a popular blogging engine with a clean interface written in javascript.
 Within the ghost deployment object, we define this config map as our volume mount in the pod template. Once the deployment is up and running, we will expose the deployment with the command `kubectl expose deployments ghost --port=2368`. In order to access the blog, now run `kubectl proxy`.
 
 Couldn't get it working and want to move on. As much as it would be nice to get the troubleshooting skills, it's a goddamn Sunday and I wanna do this redis example and hit the gym.
+
+## Redis
+
+Redis is an in-memory k/v store(obvi). Going to deploy an example one into a kubernetes cluter! In order to deploy this, we will need to deploy a `redis-server` which is the k/v store and `redis-sentinel`, which implements the health checking and failover logic for the replicated redis cluster. A redis cluster uses the parent-child relationship to provide fail-over and replication capabilites. Let's do it!
+
+In order to initialize redis, we need to map all of the config files and the initialization scripts into a configmap:
+```
+kubectl create configmap \
+--from-file=slave.conf=./slave.conf \
+--from-file=master.conf=./master.conf \
+--from-file=sentinel.conf=./sentinel.conf \
+--from-file=init.sh=./init.sh \
+--from-file=sentinel.sh=./sentinel.sh \
+redis-config
+```
+
+The redis service created provides naming and discovery for the redis replicas(in this case, just the one redis server). In the redis object, there are two volumes. One for the configmap to configure the two redis applications and an emptyDir volume that is mapped into the redis server container to hold the application data so that it survives a container restart.
+
+Couldn't get it working, but I should go to the gym if I want to make it home in time to help with dinner.
