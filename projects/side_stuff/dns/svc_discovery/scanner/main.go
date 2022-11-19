@@ -66,7 +66,7 @@ func Scan(ctx context.Context, hostname string, portrange int) (chan ScanResult,
 
 func main() {
 	target := "localhost"
-	fmt.Println("Port Scanning 1024 range on", target)
+	fmt.Println("Port Scanning 49152 range on", target)
 	ctx, cancel := signalcontext.OnInterrupt()
 	defer cancel()
 
