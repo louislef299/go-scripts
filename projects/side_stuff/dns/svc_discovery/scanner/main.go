@@ -1,12 +1,15 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
+
+	"github.com/sethvargo/go-signalcontext"
+	"golang.org/x/sync/errgroup"
 )
 
 const (
@@ -27,54 +30,59 @@ func isOpen(state string) bool {
 	return false
 }
 
-func ScanPort(protocol, hostname string, port int, r chan ScanResult, wg *sync.WaitGroup) {
-	defer wg.Done()
-	result := ScanResult{Port: port, Protocol: protocol}
-	address := hostname + ":" + strconv.Itoa(port)
-	conn, err := net.DialTimeout(protocol, address, 60*time.Second)
-	if err != nil {
-		result.State = closed
-		r <- result
-		return
+func Scan(ctx context.Context, hostname string, portrange int) (chan ScanResult, chan struct{}) {
+	r := make(chan ScanResult)
+	done := make(chan struct{})
+
+	g, ctx := errgroup.WithContext(ctx)
+	protocol := "tcp"
+	for port := 0; port <= portrange; port++ {
+		port := port // https://golang.org/doc/faq#closures_and_goroutines
+		g.Go(func() error {
+			time.Sleep(time.Second)
+			result := ScanResult{Port: port, Protocol: protocol}
+			address := hostname + ":" + strconv.Itoa(port)
+			conn, err := net.DialTimeout(protocol, address, 60*time.Second)
+			if err != nil {
+				result.State = closed
+				r <- result
+				return err
+			}
+			defer conn.Close()
+			result.State = open
+			r <- result
+			return nil
+		})
 	}
-	defer conn.Close()
-	result.State = open
-	r <- result
-}
 
-func Scan(hostname string, portrange int) chan ScanResult {
-	results := make(chan ScanResult)
+	go func() {
+		g.Wait()
+		close(r)
+		done <- struct{}{}
+	}()
 
-	var wg sync.WaitGroup
-	for i := 0; i <= portrange; i++ {
-		wg.Add(1)
-		// go ScanPort("udp", hostname, i, results, &wg) //-> ignore udps for now
-		go ScanPort("tcp", hostname, i, results, &wg)
-	}
-
-	go func(c chan ScanResult) {
-		wg.Wait()
-		close(results)
-	}(results)
-
-	return results
+	return r, done
 }
 
 func main() {
 	target := "localhost"
 	fmt.Println("Port Scanning 1024 range on", target)
-	results := Scan(target, 1024)
-	for s := range results {
-		if isOpen(s.State) {
-			fmt.Printf("%s:%d is %s\n", s.Protocol, s.Port, s.State)
-		}
-	}
+	ctx, cancel := signalcontext.OnInterrupt()
+	defer cancel()
 
-	fmt.Println("Port Scanning 49152 range on", target)
-	results = Scan(target, 49152)
-	for s := range results {
-		if isOpen(s.State) {
-			fmt.Printf("%s:%d is %s\n", s.Protocol, s.Port, s.State)
+	long_results, done := Scan(ctx, target, 49152)
+	for {
+		select {
+		case l := <-long_results:
+			if isOpen(l.State) {
+				fmt.Printf("%s:%d is %s\n", l.Protocol, l.Port, l.State)
+			}
+		case <-done:
+			fmt.Println("scan is finished")
+			return
+		case <-ctx.Done():
+			fmt.Println("recieved SIGINT, exiting")
+			return
 		}
 	}
 }
