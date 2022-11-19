@@ -47,8 +47,8 @@ func Scan(hostname string, portrange int) chan ScanResult {
 
 	var wg sync.WaitGroup
 	for i := 0; i <= portrange; i++ {
-		wg.Add(2)
-		go ScanPort("udp", hostname, i, results, &wg)
+		wg.Add(1)
+		// go ScanPort("udp", hostname, i, results, &wg) //-> ignore udps for now
 		go ScanPort("tcp", hostname, i, results, &wg)
 	}
 
