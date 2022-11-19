@@ -39,7 +39,6 @@ func Scan(ctx context.Context, hostname string, portrange int) (chan ScanResult,
 	for port := 0; port <= portrange; port++ {
 		port := port // https://golang.org/doc/faq#closures_and_goroutines
 		g.Go(func() error {
-			time.Sleep(time.Second)
 			result := ScanResult{Port: port, Protocol: protocol}
 			address := hostname + ":" + strconv.Itoa(port)
 			conn, err := net.DialTimeout(protocol, address, 60*time.Second)
