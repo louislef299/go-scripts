@@ -18,6 +18,8 @@ import (
 var (
 	verbose bool
 	piname  string
+	homedir string
+	sshkey  string
 )
 
 func interactiveSession(session *ssh.Session) {
@@ -55,13 +57,20 @@ func printhost(h *icmpscan.Host) {
 	if h.Hostname != "" {
 		fmt.Printf("%v has hostname %s\n", h.IP, h.Hostname)
 	} else {
-		fmt.Printf("%v does not have a hostname", h.IP)
+		fmt.Printf("%v does not have a hostname\n", h.IP)
 	}
 }
 
 func init() {
+	var err error
+	homedir, err = os.UserHomeDir()
+	if err != nil {
+		log.Fatal("could not get home directory:", err)
+	}
+
 	flag.BoolVar(&verbose, "v", false, "verbose output of all connections")
 	flag.StringVar(&piname, "piname", "raspberrypi", "the dns name of the pi")
+	flag.StringVar(&sshkey, "sshkey", ".ssh/id_rsa", "the path to the ssh public key to use")
 }
 
 func main() {
@@ -94,15 +103,12 @@ func main() {
 	}
 
 	log.Println("generating ssh configuration")
-	hostKeyCallback, err := knownhosts.New("/Users/louis/.ssh/known_hosts")
+	hostKeyCallback, err := knownhosts.New(path.Join(homedir, ".ssh/known_hosts"))
 	if err != nil {
 		log.Fatalf("Unable to create host key call back %v", err)
 	}
-	homedir, err := os.UserHomeDir()
-	if err != nil {
-		log.Fatal("could not get home directory:", err)
-	}
-	key, err := os.ReadFile(path.Join(homedir, ".ssh/id_rsa"))
+
+	key, err := os.ReadFile(path.Join(homedir, sshkey))
 	if err != nil {
 		log.Fatalf("unable to read private key: %v", err)
 	}
