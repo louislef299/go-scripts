@@ -8,7 +8,10 @@ require (
 	github.com/google/gopacket v1.1.20-0.20210304165259-20562ffb40f8
 	github.com/hashicorp/mdns v1.0.5
 	github.com/jpillora/icmpscan v1.3.1
+	github.com/sethvargo/go-signalcontext v0.1.0
 	golang.org/x/crypto v0.3.0
+	golang.org/x/net v0.2.0
+	golang.org/x/sync v0.1.0
 	golang.org/x/tour v0.1.0
 	gopkg.in/ldap.v2 v2.5.1
 )
@@ -29,12 +32,9 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421 // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
-	github.com/sethvargo/go-signalcontext v0.1.0 // indirect
 	github.com/stretchr/testify v1.8.0 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	golang.org/x/mod v0.7.0 // indirect
-	golang.org/x/net v0.2.0 // indirect
-	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.2.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/tools v0.3.0 // indirect

@@ -20,6 +20,7 @@ var (
 	piname  string
 	homedir string
 	sshkey  string
+	conn    bool
 )
 
 func interactiveSession(session *ssh.Session) {
@@ -61,47 +62,7 @@ func printhost(h *icmpscan.Host) {
 	}
 }
 
-func init() {
-	var err error
-	homedir, err = os.UserHomeDir()
-	if err != nil {
-		log.Fatal("could not get home directory:", err)
-	}
-
-	flag.BoolVar(&verbose, "v", false, "verbose output of all connections")
-	flag.StringVar(&piname, "piname", "raspberrypi", "the dns name of the pi")
-	flag.StringVar(&sshkey, "sshkey", ".ssh/id_rsa", "the path to the ssh public key to use")
-}
-
-func main() {
-	flag.Parse()
-	log.Println("gathering all hosts from the local network")
-	hosts, err := icmpscan.Run(icmpscan.Spec{
-		Hostnames: true,
-		MACs:      true,
-		Log:       verbose,
-	})
-	if err != nil {
-		log.Fatal("could not scan:", err)
-	}
-
-	log.Println("locating pi ip address")
-	var ip net.IP
-	found := false
-	for _, host := range hosts {
-		if verbose {
-			printhost(host)
-		}
-		if strings.Compare(host.Hostname, piname) == 0 {
-			ip = host.IP
-			found = true
-			break
-		}
-	}
-	if !found {
-		log.Fatal("could not find pi! add verbose flag to see list of hosts")
-	}
-
+func sshconn(ip net.IP) {
 	log.Println("generating ssh configuration")
 	hostKeyCallback, err := knownhosts.New(path.Join(homedir, ".ssh/known_hosts"))
 	if err != nil {
@@ -141,4 +102,52 @@ func main() {
 
 	log.Println("starting ssh session")
 	interactiveSession(session)
+}
+
+func init() {
+	var err error
+	homedir, err = os.UserHomeDir()
+	if err != nil {
+		log.Fatal("could not get home directory:", err)
+	}
+
+	flag.BoolVar(&verbose, "v", false, "verbose output of all connections")
+	flag.StringVar(&piname, "piname", "raspberrypi", "the dns name of the pi")
+	flag.StringVar(&sshkey, "sshkey", ".ssh/id_rsa", "the path to the ssh public key to use")
+	flag.BoolVar(&conn, "conn", false, "run the go connection script(buggy)")
+}
+
+func main() {
+	flag.Parse()
+	log.Println("gathering all hosts from the local network")
+	hosts, err := icmpscan.Run(icmpscan.Spec{
+		Hostnames: true,
+		MACs:      true,
+		Log:       verbose,
+	})
+	if err != nil {
+		log.Fatal("could not scan:", err)
+	}
+
+	log.Println("locating pi ip address")
+	var ip net.IP
+	found := false
+	for _, host := range hosts {
+		if verbose {
+			printhost(host)
+		}
+		if strings.Compare(host.Hostname, piname) == 0 {
+			ip = host.IP
+			found = true
+			break
+		}
+	}
+	if !found {
+		log.Fatal("could not find pi! add verbose flag to see list of hosts")
+	}
+	log.Println("found pi at ip address", ip.String())
+
+	if conn {
+		sshconn(ip)
+	}
 }
