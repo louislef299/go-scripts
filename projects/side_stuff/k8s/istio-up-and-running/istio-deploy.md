@@ -88,3 +88,14 @@ Can be easily controlled through the virtual services by weighing the traffic. R
 
 Security is important in istio and allows admins to easily implement mTLS between services and configure fine-grained access policies to all their services. Here is an example flow of the security we will go over:
 ![security flow overview](.images/security-overview.png)
+And here is the istio security architecture:
+![istio security architecture](.images/istio-sec-arch.png)
+
+#### Authentication
+
+Authentication between services in istio is typically handled with mTLS. This verifies that services are who they truely advertise themselves as and promotes encrypted traffic within the mesh. Here is an example of a peer authentication policy for the reviews service specifically:
+![service authentication](.images/service-auth.png)
+and here is an example of a namespace wide authentication policy:
+![namespace authentication](.images/namespace-auth.png)
+and here is an example of an authentication policy for the entire mesh:
+![mesh authentication](.images/namespace-auth.png)
