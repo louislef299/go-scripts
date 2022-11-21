@@ -67,3 +67,8 @@ Here is an example of the two injection faults:
 #### Timeouts
 
 Timeouts require a request to be fulfilled in a certain amount of time. If it doesn't succeed in the specified amount of time, the request will fail and return an error. A timeout of 3s was added to virtual-svc1 and can be tested with a delay fault injection.
+
+#### Retries
+
+Retries are also set at the virtual service level. Here is an example of one along with istio's default retry settings:
+![istio retry config](.images/retries.png)
