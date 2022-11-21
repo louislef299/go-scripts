@@ -72,3 +72,10 @@ Timeouts require a request to be fulfilled in a certain amount of time. If it do
 
 Retries are also set at the virtual service level. Here is an example of one along with istio's default retry settings:
 ![istio retry config](.images/retries.png)
+
+#### Circuit Breakers
+
+Circuit breaking limits the number of queued requests. Once a limit has been reached, all further requests will fail. Here is an example flow of that:
+![circuit breaker flow](.images/circuit-flow.png)
+and here is an example configuration within the DestinationRule:
+![circuit breaker config](.images/circuit-config.png)
