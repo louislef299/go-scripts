@@ -72,9 +72,9 @@ func main() {
 	results, done := Scan(ctx, target, 49152)
 	for {
 		select {
-		case l := <-results:
-			if isOpen(l.State) {
-				fmt.Printf("%s:%d is %s\n", l.Protocol, l.Port, l.State)
+		case r := <-results:
+			if isOpen(r.State) {
+				fmt.Printf("%s:%d is %s\n", r.Protocol, r.Port, r.State)
 			}
 		case <-done:
 			fmt.Println("scan is finished")
