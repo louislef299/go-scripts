@@ -99,3 +99,8 @@ and here is an example of a namespace wide authentication policy:
 ![namespace authentication](.images/namespace-auth.png)
 and here is an example of an authentication policy for the entire mesh:
 ![mesh authentication](.images/namespace-auth.png)
+
+#### Authorization
+
+Authorization defines which service can interact with which service and sets policies on the actions that the service can make on another service.
+![auth diagram](.images/authorization-diagram.png)
