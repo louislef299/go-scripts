@@ -79,3 +79,7 @@ Circuit breaking limits the number of queued requests. Once a limit has been rea
 ![circuit breaker flow](.images/circuit-flow.png)
 and here is an example configuration within the DestinationRule:
 ![circuit breaker config](.images/circuit-config.png)
+
+#### A/B Testing
+
+Can be easily controlled through the virtual services by weighing the traffic. Refer to virtual service if you need a review.
