@@ -54,3 +54,16 @@ Virtual services are istios way of controlling all routing rules. They define ro
 
 Below is an example of a weighted virtual service deployment. We can toggle the weights in order to define how much traffic is flowing to the pods and give us a more granular approach to creating new services.
 ![review svc weight example](.images/weighted-reviews.png)
+
+#### Destination Rules
+
+In the previous example, there is a new term called subsets. Subsets are defined in destination rules, which we will cover now. An example subset is created in bookinfo/review-destination.yml. Further notes on the destination rule is there.
+
+#### Fault Injections
+
+Here is an example of the two injection faults:
+![fault injections](.images/fault-injection.png)
+
+#### Timeouts
+
+Timeouts require a request to be fulfilled in a certain amount of time. If it doesn't succeed in the specified amount of time, the request will fail and return an error. A timeout of 3s was added to virtual-svc1 and can be tested with a delay fault injection.
