@@ -69,10 +69,10 @@ func main() {
 	ctx, cancel := signalcontext.OnInterrupt()
 	defer cancel()
 
-	long_results, done := Scan(ctx, target, 49152)
+	results, done := Scan(ctx, target, 49152)
 	for {
 		select {
-		case l := <-long_results:
+		case l := <-results:
 			if isOpen(l.State) {
 				fmt.Printf("%s:%d is %s\n", l.Protocol, l.Port, l.State)
 			}
