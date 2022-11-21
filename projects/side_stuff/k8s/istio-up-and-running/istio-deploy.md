@@ -83,3 +83,8 @@ and here is an example configuration within the DestinationRule:
 #### A/B Testing
 
 Can be easily controlled through the virtual services by weighing the traffic. Refer to virtual service if you need a review.
+
+### Security
+
+Security is important in istio and allows admins to easily implement mTLS between services and configure fine-grained access policies to all their services. Here is an example flow of the security we will go over:
+![security flow overview](.images/security-overview.png)
