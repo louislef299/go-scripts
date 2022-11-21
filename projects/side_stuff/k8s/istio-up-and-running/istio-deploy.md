@@ -104,3 +104,7 @@ and here is an example of an authentication policy for the entire mesh:
 
 Authorization defines which service can interact with which service and sets policies on the actions that the service can make on another service.
 ![auth diagram](.images/authorization-diagram.png)
+
+### Observability
+
+Dives deeper into working with metrics gathered from Prometheus and output them to Grafana as well as talking more on Kiali. Nothing that I would really need here. I think I have enough to get my feet wet.
