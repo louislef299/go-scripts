@@ -51,3 +51,6 @@ We target the istio controller that sits at the edge of the mesh with the select
 
 Virtual services are istios way of controlling all routing rules. They define routing rules for all traffic coming from an ingress gateway into the service mesh. The example template is at bookinfo/virtual-svc1.yml and below is the configuration:
 ![bookinfo vsvc](.images/istio-vs.png)
+
+Below is an example of a weighted virtual service deployment. We can toggle the weights in order to define how much traffic is flowing to the pods and give us a more granular approach to creating new services.
+![review svc weight example](.images/weighted-reviews.png)
