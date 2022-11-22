@@ -43,7 +43,7 @@ func ScanWithoutRoutines(hostname string, portrange int) {
 	}
 }
 
-func Scan(ctx context.Context, hostname string, portrange int) (chan ScanResult, chan struct{}) {
+func ScanWithRoutines(ctx context.Context, hostname string, portrange int) (chan ScanResult, chan struct{}) {
 	r := make(chan ScanResult)
 	done := make(chan struct{})
 
@@ -88,7 +88,7 @@ func main() {
 	time.Sleep(time.Second * 3)
 
 	start = time.Now()
-	results, done := Scan(ctx, target, 49152)
+	results, done := ScanWithRoutines(ctx, target, 49152)
 	for {
 		select {
 		case r := <-results:
