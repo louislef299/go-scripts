@@ -30,7 +30,20 @@ func isOpen(state string) bool {
 	return false
 }
 
-func Scan(ctx context.Context, hostname string, portrange int) (chan ScanResult, chan struct{}) {
+func ScanWithoutRoutines(hostname string, portrange int) {
+	protocol := "tcp"
+	for port := 0; port <= portrange; port++ {
+		result := ScanResult{Port: port, Protocol: protocol}
+		address := hostname + ":" + strconv.Itoa(port)
+		conn, err := net.DialTimeout(protocol, address, 60*time.Second)
+		if err == nil {
+			fmt.Printf("%s:%d is %s\n", result.Protocol, result.Port, result.State)
+			conn.Close()
+		}
+	}
+}
+
+func ScanWithRoutines(ctx context.Context, hostname string, portrange int) (chan ScanResult, chan struct{}) {
 	r := make(chan ScanResult)
 	done := make(chan struct{})
 
@@ -69,15 +82,21 @@ func main() {
 	ctx, cancel := signalcontext.OnInterrupt()
 	defer cancel()
 
-	long_results, done := Scan(ctx, target, 49152)
+	start := time.Now()
+	ScanWithoutRoutines(target, 49152)
+	fmt.Printf("scan without goroutines took %v\n", time.Since(start).Truncate(time.Second))
+	time.Sleep(time.Second * 3)
+
+	start = time.Now()
+	results, done := ScanWithRoutines(ctx, target, 49152)
 	for {
 		select {
-		case l := <-long_results:
-			if isOpen(l.State) {
-				fmt.Printf("%s:%d is %s\n", l.Protocol, l.Port, l.State)
+		case r := <-results:
+			if isOpen(r.State) {
+				fmt.Printf("%s:%d is Open\n", r.Protocol, r.Port)
 			}
 		case <-done:
-			fmt.Println("scan is finished")
+			fmt.Printf("scan with goroutines took %v\n", time.Since(start).Truncate(time.Second))
 			return
 		case <-ctx.Done():
 			fmt.Println("recieved SIGINT, exiting")
