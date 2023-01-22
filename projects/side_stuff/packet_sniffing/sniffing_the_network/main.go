@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/google/gopacket"
@@ -15,6 +16,7 @@ var iface = flag.String("iface", "en0", "Select interface where to capture")
 var snaplen = flag.Int("snaplen", 1024, "Maximun sise to read for each packet")
 var promisc = flag.Bool("promisc", false, "Enable promiscuous mode")
 var timeoutT = flag.Int("timeout", 30, "Connection Timeout in seconds")
+var file = flag.String("file", "", "Write packet output to a file")
 
 func main() {
 	log.Println("start")
@@ -43,7 +45,17 @@ func main() {
 
 	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 
+	out := os.Stdout
+	if *file != "" {
+		f, err := os.OpenFile(*file, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0744)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer f.Close()
+
+		out = f
+	}
 	for packet := range packetSource.Packets() {
-		fmt.Println(packet)
+		fmt.Fprintf(out, "%v\n", packet)
 	}
 }
