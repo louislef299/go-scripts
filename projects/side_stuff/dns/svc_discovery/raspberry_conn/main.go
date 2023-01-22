@@ -118,6 +118,7 @@ func init() {
 }
 
 func main() {
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 	flag.Parse()
 	log.Println("gathering all hosts from the local network")
 	hosts, err := icmpscan.Run(icmpscan.Spec{
