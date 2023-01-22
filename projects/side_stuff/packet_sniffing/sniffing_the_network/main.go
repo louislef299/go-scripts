@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/google/gopacket"
+	_ "github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
 )
 
@@ -57,5 +58,9 @@ func main() {
 	}
 	for packet := range packetSource.Packets() {
 		fmt.Fprintf(out, "%v\n", packet)
+
+		if app := packet.ApplicationLayer(); app != nil {
+			fmt.Println("Payload:", string(app.Payload()))
+		}
 	}
 }
