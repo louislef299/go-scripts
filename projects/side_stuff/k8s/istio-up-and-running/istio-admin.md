@@ -1,6 +1,6 @@
-# Administration of Istio
+# *Administration of Istio*
 
-## Installing Istio
+## *Installing Istio*
 
 Installing istio on a local cluster is pretty easy with `istioctl`. Just run `istioctl` and it will set up the control plane and ingress gateway. You can uninstall the instio configurations with `istioctl uninstall --purge`. To get an overview of the mesh that is installed, run `istioctl proxy-status`. This will return something like:
 ```
@@ -9,7 +9,7 @@ istio-ingressgateway-6785fcd48-pr5xc.istio-system     Kubernetes     SYNCED     
 ```
 This information of understanding how istio if managing the configuration of Envoy deployed as gateways helps in relation to how Envoy instances are managed in the data plane. The data plane, to review, is the sidecar proxies that are deployed with the application. The only side car proxies deployed in the above example belong to the ingress gateway.
 
-## Networking in Istio
+## *Networking in Istio*
 
 The following ports are used by the istio sidecar proxy(Envoy):
 
@@ -37,11 +37,11 @@ And the following ports are used by the istio control plane(istiod):
 | 15014	| HTTP | Control plane monitoring | No |
 | 15017 | HTTPS | Webhook container port, forwarded from 443 | No |
 
-## Service Proxy
+## *Service Proxy*
 
 A service proxy is the client-side intermediary transiting requests on behalf of the service. It enables applications to send a receive messages over a channel as method calls. In Istio's case, traffic is transparently intercepted using iptables rules and redirected to the service proxy. 
 
-### iptables
+### *iptables*
 
 iptables is a user-space CLI for managing host-based firewalling and packet manipulation in Linux. Netfilter is the Linux kernel module comprising tables, chains, and rules.
 
@@ -51,11 +51,11 @@ An iptables environment will contain multiple tables: *Filter*, *NAT*, *Mangle* 
 
 You can view the iptables in action on the pod by running `iptables -t nat --list`. Pilot(istiod) configures the traffic policy and the service proxies implement them. By intercepting each packet, these proxies add resiliency to a distributed system by standardizing the location of a resource(app.example.com) while the service can move from location to location.
 
-### Envoy
+### *Envoy*
 
 One thing to note on Envoy: it has the capability to transparently operate as a gRPC-JSON transcoder meaning it allows a client to send an HTTP/1.1 JSON payload and translate the request into the corresponding gRPC call. This works in the other direction as well.
 
-### Sidecar Injection
+### *Sidecar Injection*
 
 You can manually inject a sidecar into an application with `istioctl kube-inject`. This will create the manifest files with the additional container, so it is usually paired with `kubectl apply`. The `istioctl kube-inject` function is **NOT** idempotent so be careful.
 
