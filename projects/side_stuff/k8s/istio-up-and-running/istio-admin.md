@@ -60,3 +60,33 @@ One thing to note on Envoy: it has the capability to transparently operate as a 
 You can manually inject a sidecar into an application with `istioctl kube-inject`. This will create the manifest files with the additional container, so it is usually paired with `kubectl apply`. The `istioctl kube-inject` function is **NOT** idempotent so be careful.
 
 The istio-sidecar-injector mutating webhook also injects sidecars with the `istio-injection=enabled` label on namespaces. A little easier to work with than the manual intervention. To set up network filters(iptables) to control traffic flow, Istio uses init containers when pods are starting up.
+
+## *Pilot(Istiod)*
+
+Istiod - The Istio control plane. It provides service discovery, configuration and certificate management. It consists of the following sub-components:
+- Pilot - Responsible for configuring the proxies at runtime.
+- Citadel - Responsible for certificate issuance and rotation.
+- Galley - Responsible for validating, ingesting, aggregating, transforming and distributing config within Istio.
+
+### *A note on Envoy:*
+
+Envoy is said to have xDS APIs, which means *Discovery Service* APIs. The 'x' in the name generally means one of the four configuration primitives. These include LDS, RDS, CDS, and EDS. 
+
+- Listener Discovery Service(LDS) - Listeners come in two flavors: *physical* and *virtual*. Physical listeners are attached to a port, while virtual listeners accept traffic from the physical listeners.
+- Routing Discovery Service(RDS) - Configure how that listener directs traffic to a specific cluster.
+- Cluster Discovery Service(CDS) - A cluster in this instance is a group of endpoints along with information about how to contact these endpoints. Analogous to a kubernetes service. 
+- Endpoint Discovery Service(EDS) - Enpoints are individual network hosts(IP addresses or DNS names) that Envoy will forward traffic to.
+
+In relation to Istio's networking configurations, they map to Envoy's APIs nearly directly:
+- Gatways configure physical listeners
+- VirtualServices configure both virtual listeners and routes
+- ServiceEntrys create clusters and populate their endpoints
+- DestinationRules configure how to cmmunicate with clusters and create new clusters when they're used to define subsets
+
+### Debugging and Troubleshooting Pilot
+
+- `istioctl authn` is used for inspecting the state of mTLS in the mesh
+- `istioctl proxy-config <bootstrap | listener | route | cluster> <k8s-pod>` will query the service proxy's administrative interface to retrieve the current state of the service proxy's configuration.
+- `istioctl proxy-status <Istio service>` connects to Pilots debug interface and retrieves the xDS status of each connected service proxy instance, proving whether each proxy's configuration is up to date with the latest configuration in Pilot.
+
+#### On page 112, there are debug endpoints that you can connect to for additional information on Pilot. Potential clctl automation?
