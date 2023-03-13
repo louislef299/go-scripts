@@ -90,3 +90,5 @@ In relation to Istio's networking configurations, they map to Envoy's APIs nearl
 - `istioctl proxy-status <Istio service>` connects to Pilots debug interface and retrieves the xDS status of each connected service proxy instance, proving whether each proxy's configuration is up to date with the latest configuration in Pilot.
 
 #### On page 112, there are debug endpoints that you can connect to for additional information on Pilot. Potential clctl automation?
+
+Examples can be found at the [official GitHub repository](https://github.com/istio-up-and-running/examples)
