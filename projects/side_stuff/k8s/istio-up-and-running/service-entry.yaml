@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: http-server
+spec:
+  hosts:
+  - some.domain.com
+  ports:
+  - number: 80
+    name: http
+    protocol: http 
+  resolution: STATIC
+  endpoints:
+    - address: 2.2.2.2
+
+# This ServiceEntry(CDS) creates a single cluster, outbound|80||some.domain.com
+# View this new CDS with:
+# istioctl proxy-config cluster istio-ingressgateway-6785fcd48-pr5xc -o json -n istio-system
