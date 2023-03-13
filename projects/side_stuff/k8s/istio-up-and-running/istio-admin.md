@@ -92,3 +92,5 @@ In relation to Istio's networking configurations, they map to Envoy's APIs nearl
 #### On page 112, there are debug endpoints that you can connect to for additional information on Pilot. Potential clctl automation?
 
 Examples can be found at the [official GitHub repository](https://github.com/istio-up-and-running/examples)
+
+Also check out the chapter 7 configs directory and comments for more information on each of the istio types.
