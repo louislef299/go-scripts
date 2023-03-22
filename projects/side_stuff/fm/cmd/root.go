@@ -17,6 +17,9 @@ import (
 
 const chunkSize = 64000
 
+// Ran through the following:
+// https://zetcode.com/golang/yaml/
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "fm",
