@@ -1,7 +1,18 @@
 package main
 
-import "github.com/louislef299/bash/projects/bare_webserver/pkg/router"
+import (
+	"net/http"
+
+	"github.com/louislef299/bash/projects/bare_webserver/pkg/router"
+)
 
 func main() {
-	router.NewRouter()
+	r := router.NewRouter()
+	r.GET("/", func(r *http.Request) (statusCode int, data map[string]interface{}) {
+		return 200, map[string]interface{}{
+			"name": "elonmux",
+		}
+	})
+
+	http.ListenAndServe(":8080", r)
 }
