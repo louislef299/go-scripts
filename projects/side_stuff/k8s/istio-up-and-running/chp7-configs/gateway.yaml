@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: foo-com-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - "*.foo.com"
+    port:
+      number: 80
+      name: http
+      protocol: HTTP
+
+# The gateway represents the physical listener of the Envoy proxy configuration.
+# This will create a single HTTP listener on port 80 on the ingress Gateway.
+
+# To take a look at the Envoy listener(LDS) configuration for the Gateway, run:
+# istioctl proxy-config listener istio-ingressgateway-6785fcd48-pr5xc -o json -n istio-system

@@ -1,0 +1,30 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: foo-default
+spec:
+  hosts:
+  - bar.foo.com
+  gateways:
+  - foo-com-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /whiz
+    route:
+    - destination:
+        host: whiz.foo.svc.cluster.local
+  - route:
+    - destination:
+        host: bar.foo.svc.cluster.local
+
+# After the Gateway is configured, we will bind this VirtualService
+# to it and create the virtual listeners in Envoy
+
+# To view the LDS configuration, rerun 
+# istioctl proxy-config listener istio-ingressgateway-6785fcd48-pr5xc -o json -n istio-system
+
+# After adding the /whiz route, the additional route  condition that can be viewed in Envoy with
+# istioctl proxy-config route istio-ingressgateway-6785fcd48-pr5xc -o json -n istio-system
+# In the VirtualService, ORDER MATTERS! The precedence of the matches is mirrored in the spec
+# configuration
