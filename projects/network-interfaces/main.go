@@ -23,6 +23,10 @@ const (
 )
 
 func main() {
+	FirstExample()
+}
+
+func FirstExample() {
 	d, err := tun.CreateTUN("louis0", 1420)
 	if err != nil {
 		panic(err)
