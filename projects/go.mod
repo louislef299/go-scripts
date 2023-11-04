@@ -18,12 +18,15 @@ require (
 
 require (
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.10.0 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/google/go-cmp v0.5.7 // indirect
+	github.com/gorilla/mux v1.8.0 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/jpillora/arp v0.0.0-20170204155840-96a8ba0be1a4 // indirect
 	github.com/jpillora/ipmath v0.0.0-20180121110145-ebede80a2ab9 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
