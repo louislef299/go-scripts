@@ -94,6 +94,24 @@ func FirstExample() {
 
 	logger.Verbosef("UAPI listener started")
 
+	// You can now write data to the TUN interface.
+	data := []byte("Hello, TUN interface!")
+	_, err = d.Write(data, 16)
+	if err != nil {
+		fmt.Println("Error writing to TUN device:", err)
+		return
+	}
+
+	// Read from the TUN interface (for incoming packets).
+	buffer := make([]byte, 1500) // Adjust the buffer size as needed.
+	n, err := d.Read(buffer)
+	if err != nil {
+		fmt.Println("Error reading from TUN device:", err)
+		return
+	}
+
+	fmt.Printf("Received from TUN interface: %s\n", string(buffer[:n]))
+
 	// wait for program to terminate
 
 	signal.Notify(term, unix.SIGTERM)

@@ -63,9 +63,11 @@ should be able to pull references from there and Tailscale.
 - [Wireguard Mirror][]
 - [Understanding TUN/TAP][]
 - [File descriptor deep dive][]
+- [TUN/TAP Interface Tutorial][]
 
 [Linux TUN/TAP Networking]: https://docs.kernel.org/networking/tuntap.html
 [Wireguard Mirror]: https://github.com/tailscale/wireguard-go
 [Point-to-Point topology]: https://lightyear.ai/blogs/point-to-point-leased-lines-p2p-vs-wavelength-circuits
 [Understanding TUN/TAP]: https://blog.cloudflare.com/virtual-networking-101-understanding-tap/
 [File descriptor deep dive]: https://copyconstruct.medium.com/nonblocking-i-o-99948ad7c957
+[TUN/TAP Interface Tutorial]: https://backreference.org/2010/03/26/tuntap-interface-tutorial/
