@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -33,6 +34,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// This function is responsible for creating the genesis block
+	// and appending it to the blockchain.
 	go func() {
 		t := time.Now()
 		genesisBlock := Block{0, t.String(), 0, "", ""}
@@ -43,18 +46,18 @@ func main() {
 
 }
 
+// calculateHash calculates the hash of a block using SHA256.
 func calculateHash(block Block) string {
-	record := string(block.Index) + block.Timestamp + string(block.BPM) + block.PrevHash
+	record := fmt.Sprint(block.Index) + block.Timestamp + fmt.Sprint(block.BPM) + block.PrevHash
 	h := sha256.New()
 	h.Write([]byte(record))
 	hashed := h.Sum(nil)
 	return hex.EncodeToString(hashed)
 }
 
+// generateBlock generates a new block in the blockchain using the previous block and BPM.
 func generateBlock(oldBlock Block, BPM int) (Block, error) {
-
 	var newBlock Block
-
 	t := time.Now()
 
 	newBlock.Index = oldBlock.Index + 1
@@ -66,6 +69,7 @@ func generateBlock(oldBlock Block, BPM int) (Block, error) {
 	return newBlock, nil
 }
 
+// isBlockValid validates a block by checking its index, previous hash, and calculated hash.
 func isBlockValid(newBlock, oldBlock Block) bool {
 	if oldBlock.Index+1 != newBlock.Index {
 		return false
@@ -154,6 +158,8 @@ func handleWriteBlock(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// respondWithJSON writes a JSON response with the given HTTP status code and payload.
+// If there is an error while marshaling the payload, it returns an HTTP 500 error.
 func respondWithJSON(w http.ResponseWriter, r *http.Request, code int, payload interface{}) {
 	response, err := json.MarshalIndent(payload, "", "  ")
 	if err != nil {

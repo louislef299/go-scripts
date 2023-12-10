@@ -2,16 +2,21 @@ package main
 
 import (
 	"context"
+	"crypto/rsa"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/xml"
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/iam"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/crewjam/saml"
+	"github.com/crewjam/saml/samlsp"
 )
 
 func hello(w http.ResponseWriter, r *http.Request) {
@@ -64,6 +69,40 @@ func main() {
 	http.Handle("/hello", samlSP.RequireAccount(http.HandlerFunc(hello)))
 	http.Handle("/saml/", samlSP)
 	http.ListenAndServe(":8000", nil)
+}
+
+func startServiceProvider() (*samlsp.Middleware, error) {
+	keyPair, err := tls.LoadX509KeyPair("myservice.cert", "myservice.key")
+	if err != nil {
+		return nil, err
+	}
+	keyPair.Leaf, err = x509.ParseCertificate(keyPair.Certificate[0])
+	if err != nil {
+		return nil, err
+	}
+
+	idpMetadataURL, err := url.Parse("https://samltest.id/saml/idp")
+	if err != nil {
+		return nil, err
+	}
+
+	idpMetadata, err := samlsp.FetchMetadata(context.Background(), http.DefaultClient, *idpMetadataURL)
+	if err != nil {
+		return nil, err
+	}
+
+	rootURL, err := url.Parse("http://localhost:8000")
+	if err != nil {
+		return nil, err
+	}
+
+	return samlsp.New(samlsp.Options{
+		URL:         *rootURL,
+		Key:         keyPair.PrivateKey.(*rsa.PrivateKey),
+		Certificate: keyPair.Leaf,
+		IDPMetadata: idpMetadata,
+	})
+
 }
 
 // aws iam list-saml-providers
