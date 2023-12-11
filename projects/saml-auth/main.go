@@ -1,12 +1,15 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"crypto/rsa"
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/base64"
 	"encoding/xml"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -20,7 +23,37 @@ import (
 )
 
 func hello(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello, World!")
+	fmt.Fprintf(w, "Hello, World!\n")
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Fprintf(w, "Error: %v\n", err)
+		return
+	}
+
+	samlResponse := r.Form.Get("SAMLResponse")
+	if samlResponse == "" {
+		fmt.Fprint(w, "No SAMLResponse found\n")
+	}
+
+	decodedResponse, err := url.QueryUnescape(samlResponse)
+	if err != nil {
+		fmt.Fprintf(w, "Error: %v\n", err)
+		return
+	}
+
+	fmt.Fprintf(w, "SAMLResponse: %s\n", decodedResponse)
+	for _, cookie := range r.Cookies() {
+		fmt.Fprintf(w, "Received cookie: %s = %s\n", cookie.Name, cookie.Value)
+		decoded, err := base64.StdEncoding.DecodeString(cookie.Value)
+		if err != nil {
+			fmt.Fprintf(w, "Error: %v\n", err)
+			return
+		}
+		fmt.Println("cookie token decoded:", decoded)
+	}
+	if len(r.Cookies()) == 0 {
+		fmt.Fprint(w, "No cookies received\n")
+	}
 }
 
 // Once up and running, can register with https://samltest.id/upload.php
@@ -31,39 +64,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	var b, bl string
-	if samlSP.Binding == "" {
-		b = saml.HTTPRedirectBinding
-		bl = samlSP.ServiceProvider.GetSSOBindingLocation(b)
-		if bl == "" {
-			b = saml.HTTPPostBinding
-			bl = samlSP.ServiceProvider.GetSSOBindingLocation(b)
-		}
-	} else {
-		b = samlSP.Binding
-		bl = samlSP.ServiceProvider.GetSSOBindingLocation(b)
-	}
-
-	log.Println("ACS URL:", samlSP.ServiceProvider.AcsURL.Path)
-	log.Println("binding:", b)
-	log.Println("binding location:", bl)
-	log.Println("result binding:", samlSP.ResponseBinding)
-
-	authReq, err := samlSP.ServiceProvider.MakeAuthenticationRequest(bl, b, samlSP.ResponseBinding)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	e := xml.NewEncoder(os.Stdout)
-	e.Indent(" ", "  ")
-	authReq.MarshalXML(e, xml.StartElement{})
-
-	// relayState, err := samlSP.RequestTracker.TrackRequest(http.ResponseWriter, http.Request, authReq.ID)
-	// if err != nil {
-	// 	http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 	return
-	// }
 
 	// Set up service provider as a server
 	http.Handle("/hello", samlSP.RequireAccount(http.HandlerFunc(hello)))
@@ -125,4 +125,95 @@ func getAWSServiceProvider() {
 	}
 
 	fmt.Println(*output.SAMLMetadataDocument)
+}
+
+func runRawRequest(samlSP *samlsp.Middleware) {
+	var b, bl string
+	if samlSP.Binding == "" {
+		b = saml.HTTPRedirectBinding
+		bl = samlSP.ServiceProvider.GetSSOBindingLocation(b)
+		if bl == "" {
+			b = saml.HTTPPostBinding
+			bl = samlSP.ServiceProvider.GetSSOBindingLocation(b)
+		}
+	} else {
+		b = samlSP.Binding
+		bl = samlSP.ServiceProvider.GetSSOBindingLocation(b)
+	}
+
+	log.Println("ACS URL:", samlSP.ServiceProvider.AcsURL.Path)
+	log.Println("binding:", b)
+	log.Println("binding location:", bl)
+	log.Println("result binding:", samlSP.ResponseBinding)
+
+	authReq, err := samlSP.ServiceProvider.MakeAuthenticationRequest(bl, b, samlSP.ResponseBinding)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Print the XML to the console
+	e := xml.NewEncoder(os.Stdout)
+	e.Indent(" ", "  ")
+	authReq.MarshalXML(e, xml.StartElement{})
+
+	mxml, err := xml.Marshal(authReq)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	samlReq := base64.StdEncoding.EncodeToString(mxml)
+	// Create an HTTP POST request with the SAMLRequest as a form value
+	data := url.Values{
+		"SAMLRequest": {samlReq},
+	}
+
+	httpClient := &http.Client{}
+	r, err := http.NewRequest("POST", authReq.Destination, bytes.NewBufferString(data.Encode()))
+	if err != nil {
+		log.Fatal(err)
+	}
+	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+
+	log.Println("sending request to", authReq.Destination)
+	// Send the HTTP request using an HTTP client
+	resp, err := httpClient.Do(r)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+	fmt.Println()
+
+	log.Println("response status:", resp.Status)
+	log.Println("response headers:", resp.Header)
+	log.Println("response body:", resp.Body)
+
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	formValues, err := url.ParseQuery(string(bodyBytes))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	samlResponse := formValues.Get("SAMLResponse")
+
+	// Decode the SAMLResponse from base64
+	decodedResponse, err := base64.StdEncoding.DecodeString(samlResponse)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	assertion, err := samlSP.ServiceProvider.ParseXMLResponse(decodedResponse, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Print the attributes returned in the SAML Assertion
+	for _, attributeStatement := range assertion.AttributeStatements {
+		for _, attribute := range attributeStatement.Attributes {
+			log.Printf("Attribute %s has value %s", attribute.Name, attribute.Values[0].Value)
+		}
+	}
 }
