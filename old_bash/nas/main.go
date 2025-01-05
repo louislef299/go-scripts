@@ -1,10 +1,9 @@
 /*
 Copyright © 2022 Louis Lefebvre <lefeb073@umn.com>
-
 */
 package main
 
-import "louis/bash/nas/cmd"
+import "github.com/louislef299/go-scripts/nas/cmd"
 
 func main() {
 	cmd.Execute()

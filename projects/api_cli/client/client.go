@@ -3,8 +3,8 @@ package client
 import (
 	"context"
 
-	pb "github.com/louislef299/bash/projects/mlctl/api/v1"
-	mdtlog "github.com/louislef299/bash/projects/mlctl/internal/log"
+	pb "github.com/louislef299/go-scripts/projects/mlctl/api/v1"
+	mdtlog "github.com/louislef299/go-scripts/projects/mlctl/internal/log"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 )

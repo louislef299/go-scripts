@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/louislef299/bash/projects/coffee_shop_playgound/chat-grpc";
+option go_package = "github.com/louislef299/go-scripts/projects/coffee_shop_playgound/chat-grpc";
 
 package chat; 
 

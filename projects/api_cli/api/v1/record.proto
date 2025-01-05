@@ -1,7 +1,7 @@
 syntax = "proto3";
 package record.v1;
 
-option go_package = "github.com/louislef299/bash/projects/mlctl/api/record_v1";
+option go_package = "github.com/louislef299/go-scripts/projects/mlctl/api/record_v1";
 
 service Record {
     rpc SendMessage(Request) returns (Response);

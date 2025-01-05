@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/louislef299/bash/projects/side_stuff/stack/stack"
+	"github.com/louislef299/go-scripts/projects/side_stuff/stack/stack"
 )
 
 const filename = "stack.log"

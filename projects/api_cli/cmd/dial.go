@@ -1,11 +1,10 @@
 /*
 Copyright © 2022 Louis Lefebvre <lefeb073@umn.com>
-
 */
 package cmd
 
 import (
-	"github.com/louislef299/bash/projects/mlctl/client"
+	"github.com/louislef299/go-scripts/projects/mlctl/client"
 	"github.com/spf13/cobra"
 )
 

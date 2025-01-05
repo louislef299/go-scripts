@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/gofrs/uuid"
-	pb "github.com/louislef299/bash/projects/side_stuff/grpc-up-and-running/productinfo/ecommerce"
+	pb "github.com/louislef299/go-scripts/projects/side_stuff/grpc-up-and-running/productinfo/ecommerce"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

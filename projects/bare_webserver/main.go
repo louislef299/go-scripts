@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/louislef299/bash/projects/bare_webserver/pkg/router"
+	"github.com/louislef299/go-scripts/projects/bare_webserver/pkg/router"
 )
 
 func main() {

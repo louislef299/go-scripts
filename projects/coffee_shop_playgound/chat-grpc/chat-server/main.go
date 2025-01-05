@@ -6,7 +6,7 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/louislef299/bash/projects/coffee_shop_playgound/chat-grpc/chat"
+	pb "github.com/louislef299/go-scripts/projects/coffee_shop_playgound/chat-grpc/chat"
 	"google.golang.org/grpc"
 )
 

@@ -4,7 +4,7 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/louislef299/bash/projects/side_stuff/grpc-up-and-running/productinfo/ecommerce"
+	pb "github.com/louislef299/go-scripts/projects/side_stuff/grpc-up-and-running/productinfo/ecommerce"
 	"google.golang.org/grpc"
 )
 

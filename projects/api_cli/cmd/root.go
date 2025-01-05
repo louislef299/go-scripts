@@ -1,6 +1,5 @@
 /*
 Copyright © 2022 Louis Lefebvre <lefeb073@umn.com>
-
 */
 package cmd
 
@@ -9,8 +8,8 @@ import (
 	"os"
 	"strings"
 
-	mdtlog "github.com/louislef299/bash/projects/mlctl/internal/log"
-	"github.com/louislef299/bash/projects/mlctl/internal/version"
+	mdtlog "github.com/louislef299/go-scripts/projects/mlctl/internal/log"
+	"github.com/louislef299/go-scripts/projects/mlctl/internal/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )

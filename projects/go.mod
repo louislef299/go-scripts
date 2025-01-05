@@ -1,4 +1,4 @@
-module louis/bash
+module github.com/louislef299/go-scripts
 
 go 1.17
 
