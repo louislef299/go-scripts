@@ -5,6 +5,8 @@ import (
 
 	"github.com/louislef299/comptime-login/pkg/login"
 	_ "github.com/louislef299/comptime-login/plugins/aws"
+	_ "github.com/louislef299/comptime-login/plugins/docker"
+	_ "github.com/louislef299/comptime-login/plugins/k8s"
 )
 
 func main() {
@@ -15,8 +17,13 @@ func main() {
 		fmt.Println(d)
 	}
 
-	_, err := login.DLogin("aws")
-	if err != nil {
+	if err := login.DLogin("aws"); err != nil {
+		panic(err)
+	}
+	if err := login.DLogin("k8s"); err != nil {
+		panic(err)
+	}
+	if err := login.DLogin("docker"); err != nil {
 		panic(err)
 	}
 }

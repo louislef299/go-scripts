@@ -6,11 +6,15 @@ import (
 	"maps"
 	"slices"
 	"sync"
+
+	"github.com/louislef299/comptime-login/pkg/config"
 )
 
 var (
 	driversMu sync.RWMutex
 	drivers   = make(map[string]Login)
+
+	c = config.Config{}
 )
 
 // Register makes a login driver available by the provided name.
@@ -20,10 +24,10 @@ func Register(name string, driver Login) {
 	driversMu.Lock()
 	defer driversMu.Unlock()
 	if driver == nil {
-		panic("sql: Register driver is nil")
+		panic("login: Register driver is nil")
 	}
 	if _, dup := drivers[name]; dup {
-		panic("sql: Register called twice for driver " + name)
+		panic("login: Register called twice for driver " + name)
 	}
 	drivers[name] = driver
 }
@@ -38,21 +42,20 @@ func Drivers() []string {
 type ConfigOptions any
 type ConfigOptionsFunc func(*ConfigOptions) error
 type Login interface {
-	Login(ctx context.Context, opts ...ConfigOptionsFunc) error
+	Login(ctx context.Context, config *config.Config, opts ...ConfigOptionsFunc) error
 }
-type Credentials struct{}
 
-func DLogin(driverName string) (*Credentials, error) {
+func DLogin(driverName string) error {
 	driversMu.RLock()
 	driverLogin, ok := drivers[driverName]
 	driversMu.RUnlock()
 	if !ok {
-		return nil, fmt.Errorf("sql: unknown driver %q (forgotten import?)", driverName)
+		return fmt.Errorf("login: unknown driver %q (forgotten import?)", driverName)
 	}
 
-	err := driverLogin.Login(context.TODO())
+	err := driverLogin.Login(context.TODO(), &c)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &Credentials{}, nil
+	return nil
 }
